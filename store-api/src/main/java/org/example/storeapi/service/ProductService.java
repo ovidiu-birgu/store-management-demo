@@ -35,10 +35,13 @@ public class ProductService {
 
     @Transactional
     public Product updateProduct(Long id, Product updatedProduct) {
-        Product existingProduct = findProduct(id);
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
         existingProduct.setName(updatedProduct.getName());
         existingProduct.setDescription(updatedProduct.getDescription());
         existingProduct.setPrice(updatedProduct.getPrice());
+        existingProduct.setStockQuantity(updatedProduct.getStockQuantity());
         return productRepository.save(existingProduct);
     }
 
