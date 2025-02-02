@@ -1,9 +1,7 @@
 package org.example.storeapi.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -20,17 +18,20 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Product name is required")
-    @Size(max = 100, message = "Product name must be less than 100 characters")
+    @NotBlank(message = "{product.name.blank}")
+    @Size(min = 1, max = 100, message = "{product.name.size}")
     private String name;
 
-    @Size(max = 500, message = "Description must be less than 500 characters")
+    @NotBlank(message = "{product.description.blank}")
+    @Size(min =1, max = 500, message = "{product.description.size}")
     private String description;
 
-    @Positive(message = "Price must be positive")
+    @NotNull(message = "{product.price.blank}")
+    @DecimalMin(value = "1.0", inclusive = false, message = "{product.price.positive}")
     private BigDecimal price;
 
-    @Positive(message = "Quantity must be positive")
+    @NotNull(message = "{product.stock.blank}")
+    @Positive(message = "{product.stock.positive}")
     private Integer stockQuantity;
 
     private LocalDateTime createdDate;
