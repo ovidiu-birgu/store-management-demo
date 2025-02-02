@@ -20,6 +20,10 @@
     Place Store Order: POST /api/orders
     Retrieve Store Orders: GET /api/orders
 
+## Swagger endpoints
+    http://localhost:8080/swagger-ui/index.html
+    http://localhost:8080/v3/api-docs
+
 ## Authentication and Authorization
 #### The API uses basic authentication with three roles:
     STORE_MANAGER: Full access to all endpoints
@@ -47,6 +51,9 @@
 
         Username: employee3
         Password: customer12345
+
+## Usage
+Import the provided "Store management API.json" file in the Application Bruno
 
 ## Technologies Used
 - **Java 17**
