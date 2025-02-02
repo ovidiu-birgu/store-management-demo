@@ -21,8 +21,8 @@
     Retrieve Store Orders: GET /api/orders
 
 ## Swagger endpoints
-    http://localhost:8080/swagger-ui/index.html
-    http://localhost:8080/v3/api-docs
+- [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+- [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
 
 ## Authentication and Authorization
 #### The API uses basic authentication with three roles:
@@ -53,7 +53,7 @@
         Password: customer12345
 
 ## Usage
-Import the provided "Store management API.json" file in the Application Bruno
+Import the provided "Store management API.json" file in the [Bruno Application](https://github.com/usebruno/bruno)
 
 ## Technologies Used
 - **Java 17**
