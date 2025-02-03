@@ -9,6 +9,7 @@ import org.example.storeapi.entity.StoreOrder;
 import org.example.storeapi.exception.InsufficientStockQuantityException;
 import org.example.storeapi.repository.ProductRepository;
 import org.example.storeapi.repository.StoreOrderRepository;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ public class StoreOrderService {
 
     private final ProductRepository productRepository;
     private final StoreOrderRepository storeOrderRepository;
+    private final MessageSource messageSource;
 
     public Page<StoreOrderResponse> findAll(Pageable pageable) {
         log.debug("StoreOrderService findAll: {}", pageable);
@@ -44,7 +47,7 @@ public class StoreOrderService {
         int stockRemaining = orderProduct.getStockQuantity() - storeOrderRequest.getQuantity();
 
         if(stockRemaining < 0)
-            throw new InsufficientStockQuantityException("{product.stock.quantity.insufficient}");
+            throw new InsufficientStockQuantityException(messageSource.getMessage("product.stock.quantity.insufficient", null, Locale.getDefault()));
 
         orderProduct.setStockQuantity(stockRemaining);
         productRepository.save(orderProduct);

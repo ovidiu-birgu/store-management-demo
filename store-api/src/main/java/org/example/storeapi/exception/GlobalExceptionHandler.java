@@ -40,4 +40,9 @@ public class GlobalExceptionHandler {
         });
         return ResponseEntity.badRequest().body(errors);
     }
+
+    @ExceptionHandler(InsufficientStockQuantityException.class)
+    public ResponseEntity<String> handleInsufficientStock(InsufficientStockQuantityException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
