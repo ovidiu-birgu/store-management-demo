@@ -54,7 +54,9 @@
 
 ## Usage
 - Import the provided "Store management API.json" file in the [Bruno Application](https://github.com/usebruno/bruno)
-- Select 'Basic Auth' in the Auth tab and insert the username and password from the provided default credentials 
+- Select 'Basic Auth' in the Auth tab and insert the username and password from the provided default credentials
+
+![](bruno-get-orders.png)
 
 ## Technologies Used
 - **Java 17**
