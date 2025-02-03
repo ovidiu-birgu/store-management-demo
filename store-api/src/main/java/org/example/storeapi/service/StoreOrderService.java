@@ -31,15 +31,17 @@ public class StoreOrderService {
 
     public Page<StoreOrderResponse> findAll(Pageable pageable) {
         log.debug("StoreOrderService findAll: {}", pageable);
-        // TODO: based on role return all orders or customer orders
-        Page<StoreOrder> customerOrders = storeOrderRepository.findByCustomerUsername("customer1", pageable);
-        Page<StoreOrder> allOrders = storeOrderRepository.findAll(pageable);
-        return customerOrders.map(this::convertToDto);
+        return storeOrderRepository.findAll(pageable).map(this::convertToDto);
+    }
+
+    public Page<StoreOrderResponse> findOrdersByCustomer(String customer, Pageable pageable) {
+        log.debug("StoreOrderService findOrdersByCustomer: {} - {}", customer, pageable);
+        return storeOrderRepository.findByCustomerUsername(customer, pageable).map(this::convertToDto);
     }
 
     @Transactional
-    public StoreOrderResponse placeStoreOrder(StoreOrderRequest storeOrderRequest) {
-        log.debug("StoreOrderService placeStoreOrder: {}", storeOrderRequest);
+    public StoreOrderResponse placeStoreOrder(String customer, StoreOrderRequest storeOrderRequest) {
+        log.debug("StoreOrderService placeStoreOrder: {} - {}", customer, storeOrderRequest);
         Product orderProduct = productRepository.findByIdAndStockQuantityGreaterThan(storeOrderRequest.getProductId(), 0)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -52,7 +54,7 @@ public class StoreOrderService {
         orderProduct.setStockQuantity(stockRemaining);
         productRepository.save(orderProduct);
 
-        StoreOrder savedStoreOrder = convertToEntity(storeOrderRequest, orderProduct);
+        StoreOrder savedStoreOrder = convertToEntity(customer, storeOrderRequest, orderProduct);
         storeOrderRepository.save(savedStoreOrder);
         return convertToDto(savedStoreOrder);
     }
@@ -60,9 +62,9 @@ public class StoreOrderService {
     /**
      * Convert StoreOrderRequest DTO to StoreOrder entity
      */
-    private StoreOrder convertToEntity(StoreOrderRequest storeOrderRequest, Product orderProduct) {
+    private StoreOrder convertToEntity(String customer, StoreOrderRequest storeOrderRequest, Product orderProduct) {
         StoreOrder storeOrder = new StoreOrder();
-        storeOrder.setCustomerUsername("customer1");//TODO use username from principal
+        storeOrder.setCustomerUsername(customer);
         storeOrder.setShippingAddress(storeOrderRequest.getShippingAddress());
         storeOrder.setQuantity(storeOrderRequest.getQuantity());
         storeOrder.setPriceAtPurchase(orderProduct.getPrice());
