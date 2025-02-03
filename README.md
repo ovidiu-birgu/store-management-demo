@@ -8,7 +8,7 @@
 - **Delete Product**: Remove a product from the store's inventory
 - **Retrieve Products**: Retrieve all store products
 - **Find Product**: Retrieve details of a product
-- **Place Store Order**: Customer places an order with a list of products
+- **Place Store Order**: Customer places an order for a product
 - **Retrieve Store Orders**: Retrieve all store orders (based on role and customer)
 
 ## API Endpoints
