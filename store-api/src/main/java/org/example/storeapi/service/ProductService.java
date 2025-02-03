@@ -1,5 +1,7 @@
 package org.example.storeapi.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.storeapi.entity.Product;
 import org.example.storeapi.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,30 +13,31 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class ProductService {
 
     private final ProductRepository productRepository;
 
-    @Autowired
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
-
     public Page<Product> findAll(Pageable pageable) {
+        log.debug("ProductService findAll: {}", pageable);
         return productRepository.findAll(pageable);
     }
 
     public Product findProduct(Long id) {
+        log.debug("ProductService findProduct: {}", id);
         return productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     public Product addProduct(Product product) {
+        log.debug("ProductService addProduct: {}", product);
         return productRepository.save(product);
     }
 
     @Transactional
     public Product updateProduct(Long id, Product updatedProduct) {
+        log.debug("ProductService updateProduct: {} - {}", id, updatedProduct);
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -47,6 +50,7 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(Long id) {
+        log.debug("ProductService deleteProduct: {}", id);
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         productRepository.delete(product);
