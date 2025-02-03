@@ -46,10 +46,10 @@
         Username: customer1
         Password: customer123
 
-        Username: employee2
+        Username: customer2
         Password: customer1234
 
-        Username: employee3
+        Username: customer3
         Password: customer12345
 
 ## Usage
