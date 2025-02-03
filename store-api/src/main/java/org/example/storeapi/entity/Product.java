@@ -1,5 +1,6 @@
 package org.example.storeapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -16,6 +17,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @NotBlank(message = "{product.name.blank}")
@@ -31,10 +33,13 @@ public class Product {
     private BigDecimal price;
 
     @NotNull(message = "{product.stock.blank}")
-    @Positive(message = "{product.stock.positive}")
+    @DecimalMin(value = "0", inclusive = false, message = "{product.stock.positive}")
     private Integer stockQuantity;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdDate;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastModifiedDate;
 
     @PrePersist
