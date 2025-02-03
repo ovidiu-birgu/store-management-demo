@@ -33,27 +33,28 @@
 ## Default Credentials:
     Manager:
         Username: manager
-        Password: manager123
+        Password: verySecurePassword
 
     Employee:
         Username: employee1
-        Password: employee123
+        Password: verySecurePassword
 
         Username: employee2
-        Password: employee1234
+        Password: verySecurePassword
 
     Customer:
         Username: customer1
-        Password: customer123
+        Password: verySecurePassword
 
         Username: customer2
-        Password: customer1234
+        Password: verySecurePassword
 
         Username: customer3
-        Password: customer12345
+        Password: verySecurePassword
 
 ## Usage
-Import the provided "Store management API.json" file in the [Bruno Application](https://github.com/usebruno/bruno)
+- Import the provided "Store management API.json" file in the [Bruno Application](https://github.com/usebruno/bruno)
+- Select 'Basic Auth' in the Auth tab and insert the username and password from the provided default credentials 
 
 ## Technologies Used
 - **Java 17**
