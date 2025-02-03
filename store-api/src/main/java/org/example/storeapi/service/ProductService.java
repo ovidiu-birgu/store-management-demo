@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.storeapi.entity.Product;
 import org.example.storeapi.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,12 +20,12 @@ public class ProductService {
 
     public Page<Product> findAll(Pageable pageable) {
         log.debug("ProductService findAll: {}", pageable);
-        return productRepository.findAll(pageable);
+        return productRepository.findByStockQuantityGreaterThan(0, pageable);
     }
 
     public Product findProduct(Long id) {
         log.debug("ProductService findProduct: {}", id);
-        return productRepository.findById(id)
+        return productRepository.findByIdAndStockQuantityGreaterThan(id, 0)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
@@ -51,8 +50,10 @@ public class ProductService {
     @Transactional
     public void deleteProduct(Long id) {
         log.debug("ProductService deleteProduct: {}", id);
-        Product product = productRepository.findById(id)
+        Product existingProduct = productRepository.findByIdAndStockQuantityGreaterThan(id, 0)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        productRepository.delete(product);
+        // deleting a product sets the stock quantity to 0
+        existingProduct.setStockQuantity(0);
+        productRepository.save(existingProduct);
     }
 }

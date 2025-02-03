@@ -33,7 +33,7 @@ public class Product {
     private BigDecimal price;
 
     @NotNull(message = "{product.stock.blank}")
-    @DecimalMin(value = "0", inclusive = false, message = "{product.stock.positive}")
+    @DecimalMin(value = "0", inclusive = true, message = "{product.stock.positive}")
     private Integer stockQuantity;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
