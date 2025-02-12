@@ -38,7 +38,11 @@ public class GlobalExceptionHandler {
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
-
+    
+    /**
+     * Handles insufficient stock quantity exceptions as error 400 code
+     * otherwise the exception InsufficientStockQuantityException would return error 500 code
+     */
     @ExceptionHandler(InsufficientStockQuantityException.class)
     public ResponseEntity<String> handleInsufficientStock(InsufficientStockQuantityException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
