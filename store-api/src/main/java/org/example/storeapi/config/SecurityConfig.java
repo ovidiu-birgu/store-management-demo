@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -43,11 +44,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/orders/**").hasAnyRole(STORE_MANAGER, STORE_EMPLOYEE, STORE_CUSTOMER)
 
                         // All other endpoints require the STORE_MANAGER role
-                        .anyRequest().hasRole("STORE_MANAGER")
+                        .anyRequest().hasRole(STORE_MANAGER)
                 )
                 .httpBasic(Customizer.withDefaults())
-                // Disable CSRF for demo
-                .csrf(csrf -> csrf.disable());
+                /*
+                 * Disable CSRF for demo
+                 * - by default Spring Security will activate its built‐in CSRF protection
+                 * with CSRF enabled I can do GET operation but not POST/PUT/DELETE (will get a 403 error code), I need to pass a valid CSRF token with each request
+                 */
+                .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
