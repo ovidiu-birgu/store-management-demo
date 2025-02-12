@@ -2,7 +2,8 @@ package org.example.storeapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.storeapi.config.TestSecurityConfig;
-import org.example.storeapi.entity.Product;
+import org.example.storeapi.dto.ProductRequest;
+import org.example.storeapi.dto.ProductResponse;
 import org.example.storeapi.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,18 +37,18 @@ class ProductControllerTest {
     @MockBean
     private ProductService productService;
 
-    private Product product;
+    private ProductResponse product;
 
     @BeforeEach
     void setUp() {
-        product = new Product();
+        product = new ProductResponse();
         product.setId(1L);
         product.setName("Sample Product");
     }
 
     @Test
     void testGetAllProducts() throws Exception {
-        Page<Product> productPage = new PageImpl<>(Collections.singletonList(product));
+        Page<ProductResponse> productPage = new PageImpl<>(Collections.singletonList(product));
         Mockito.when(productService.findAll(any(Pageable.class))).thenReturn(productPage);
 
         mockMvc.perform(get("/products")
@@ -72,13 +73,13 @@ class ProductControllerTest {
 
     @Test
     void testAddProduct() throws Exception {
-        Product newProduct = new Product();
+        ProductResponse newProduct = new ProductResponse();
         newProduct.setName("New Product");
         newProduct.setDescription("New Description");
         newProduct.setPrice(BigDecimal.valueOf(100));
         newProduct.setStockQuantity(50);
 
-        Mockito.when(productService.addProduct(any(Product.class))).thenReturn(newProduct);
+        Mockito.when(productService.addProduct(any(ProductRequest.class))).thenReturn(newProduct);
 
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -89,13 +90,13 @@ class ProductControllerTest {
 
     @Test
     void testUpdateProduct() throws Exception {
-        Product updatedProduct = new Product();
+        ProductResponse updatedProduct = new ProductResponse();
         updatedProduct.setName("Updated Product");
         updatedProduct.setDescription("Updated Description");
         updatedProduct.setPrice(BigDecimal.valueOf(123));
         updatedProduct.setStockQuantity(12);
 
-        Mockito.when(productService.updateProduct(eq(1L), any(Product.class))).thenReturn(updatedProduct);
+        Mockito.when(productService.updateProduct(eq(1L), any(ProductRequest.class))).thenReturn(updatedProduct);
 
         mockMvc.perform(put("/products/1")
                         .contentType(MediaType.APPLICATION_JSON)

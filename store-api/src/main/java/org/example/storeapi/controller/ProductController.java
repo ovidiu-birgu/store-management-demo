@@ -3,7 +3,8 @@ package org.example.storeapi.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import org.example.storeapi.entity.Product;
+import org.example.storeapi.dto.ProductRequest;
+import org.example.storeapi.dto.ProductResponse;
 import org.example.storeapi.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,7 +34,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public Page<Product> getAllProducts(
+    public Page<ProductResponse> getAllProducts(
             @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) @Min(MIN_PAGE_NUMBER) int page,
             @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) @Min(MIN_PAGE_SIZE) @Max(MAX_PAGE_SIZE) int size,
             @RequestParam(defaultValue = DEFAULT_SORT_BY) String sortBy,
@@ -45,27 +46,27 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> findProduct(@PathVariable Long id) {
-        Product product = productService.findProduct(id);
-        return ResponseEntity.ok(product);
+    public ResponseEntity<ProductResponse> findProduct(@PathVariable Long id) {
+        ProductResponse product = productService.findProduct(id);
+        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     @PostMapping
-    public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product) {
-        Product createdProduct = productService.addProduct(product);
+    public ResponseEntity<ProductResponse> addProduct(@Valid @RequestBody ProductRequest product) {
+        ProductResponse createdProduct = productService.addProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
-        Product updatedProduct = productService.updateProduct(id, product);
-        return ResponseEntity.ok(updatedProduct);
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest product) {
+        ProductResponse updatedProduct = productService.updateProduct(id, product);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

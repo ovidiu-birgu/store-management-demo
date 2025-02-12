@@ -1,5 +1,7 @@
 package org.example.storeapi.service;
 
+import org.example.storeapi.dto.ProductRequest;
+import org.example.storeapi.dto.ProductResponse;
 import org.example.storeapi.entity.Product;
 import org.example.storeapi.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
@@ -41,7 +43,7 @@ public class ProductServiceTest {
 
         when(productRepository.findByStockQuantityGreaterThan(0, pageable)).thenReturn(page);
 
-        Page<Product> result = productService.findAll(pageable);
+        Page<ProductResponse> result = productService.findAll(pageable);
         assertNotNull(result);
         assertEquals(2, result.getContent().size());
         verify(productRepository, times(1)).findByStockQuantityGreaterThan(0, pageable);
@@ -58,7 +60,7 @@ public class ProductServiceTest {
         when(productRepository.findByIdAndStockQuantityGreaterThan(id, 0))
                 .thenReturn(Optional.of(product));
 
-        Product result = productService.findProduct(id);
+        ProductResponse result = productService.findProduct(id);
         assertNotNull(result);
         assertEquals(id, result.getId());
         verify(productRepository, times(1)).findByIdAndStockQuantityGreaterThan(id, 0);
@@ -80,9 +82,13 @@ public class ProductServiceTest {
         product.setName("New Product");
         product.setStockQuantity(15);
 
+        ProductRequest productRequest = new ProductRequest();
+        productRequest.setName("New Product");
+        productRequest.setStockQuantity(15);
+
         when(productRepository.save(product)).thenReturn(product);
 
-        Product result = productService.addProduct(product);
+        ProductResponse result = productService.addProduct(productRequest);
         assertNotNull(result);
         assertEquals("New Product", result.getName());
         verify(productRepository, times(1)).save(product);
@@ -104,10 +110,16 @@ public class ProductServiceTest {
         updatedProduct.setPrice(BigDecimal.valueOf(15.0));
         updatedProduct.setStockQuantity(10);
 
+        ProductRequest updatedProductRequest = new ProductRequest();
+        updatedProductRequest.setName("New Name");
+        updatedProductRequest.setDescription("New Description");
+        updatedProductRequest.setPrice(BigDecimal.valueOf(15.0));
+        updatedProductRequest.setStockQuantity(10);
+
         when(productRepository.findById(id)).thenReturn(Optional.of(existingProduct));
         when(productRepository.save(existingProduct)).thenReturn(existingProduct);
 
-        Product result = productService.updateProduct(id, updatedProduct);
+        ProductResponse result = productService.updateProduct(id, updatedProductRequest);
         assertNotNull(result);
         assertEquals("New Name", result.getName());
         assertEquals("New Description", result.getDescription());
@@ -121,7 +133,7 @@ public class ProductServiceTest {
     @Test
     public void testUpdateProductNotFound() {
         Long id = 1L;
-        Product updatedProduct = new Product();
+        ProductRequest updatedProduct = new ProductRequest();
         updatedProduct.setName("New Name");
 
         when(productRepository.findById(id)).thenReturn(Optional.empty());
