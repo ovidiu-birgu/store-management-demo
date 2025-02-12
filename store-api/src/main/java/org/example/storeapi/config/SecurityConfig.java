@@ -26,24 +26,22 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // error endpoint available to everyone
                         .requestMatchers("/error").permitAll()
-                        // Swagger endpoints are restricted to STORE_MANAGER only
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").hasRole(STORE_MANAGER)
 
                         // Products endpoints configuration:
                         // - Updating a product (PUT) restricted to a manager or an employee
                         .requestMatchers(HttpMethod.PUT, "/products/**").hasAnyRole(STORE_MANAGER, STORE_EMPLOYEE)
                         // - Retrieving all products or finding a specific product (GET) is allowed for all roles
-                        .requestMatchers(HttpMethod.GET, "/products/**").hasAnyRole(STORE_MANAGER, STORE_EMPLOYEE, STORE_CUSTOMER)
+                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
 
                         // Orders endpoints configuration:
                         // - Placing an order (POST) allowed for all roles
-                        .requestMatchers(HttpMethod.POST, "/orders/**").hasAnyRole(STORE_MANAGER, STORE_EMPLOYEE, STORE_CUSTOMER)
+                        .requestMatchers(HttpMethod.POST, "/orders/**").permitAll()
                         // - Retrieving orders (GET): all roles can call the endpoint
                         //   for managers and employees all orders are returned
                         //   for customer only his orders are returned
-                        .requestMatchers(HttpMethod.GET, "/orders/**").hasAnyRole(STORE_MANAGER, STORE_EMPLOYEE, STORE_CUSTOMER)
+                        .requestMatchers(HttpMethod.GET, "/orders/**").permitAll()
 
-                        // All other endpoints require the STORE_MANAGER role
+                        // All other endpoints (swagger, POST create product, etc.) require the STORE_MANAGER role
                         .anyRequest().hasRole(STORE_MANAGER)
                 )
                 .httpBasic(Customizer.withDefaults())
