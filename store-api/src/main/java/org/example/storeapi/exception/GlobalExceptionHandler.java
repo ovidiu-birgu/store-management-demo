@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
@@ -21,7 +20,6 @@ public class GlobalExceptionHandler {
      *     return a list of errors for each parameter
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Map<String, Set<String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, Set<String>> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
@@ -38,7 +36,7 @@ public class GlobalExceptionHandler {
                 errors.put(fieldName, errorMsgs);
             }
         });
-        return ResponseEntity.badRequest().body(errors);
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InsufficientStockQuantityException.class)
